@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Student form</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="topbar">
+    <div class="container">
+        <a class="brand" th:href="@{/students}">Student Management</a>
+    </div>
+</header>
+
+<main class="container narrow">
+    <h1 th:text="${student.id == null} ? 'Add student' : 'Edit student'">Add student</h1>
+
+    <!-- th:object binds the form to the Student object from the controller -->
+    <form class="form" th:action="@{/students/save}" th:object="${student}" method="post">
+
+        <!-- The id is empty for a new student, filled for an edit -->
+        <input type="hidden" th:field="*{id}">
+
+        <div class="field">
+            <label for="name">Full name</label>
+            <input type="text" id="name" th:field="*{name}">
+            <!-- Validation message from @NotBlank -->
+            <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+        </div>
+
+        <div class="field">
+            <label for="email">Email</label>
+            <input type="email" id="email" th:field="*{email}">
+            <span class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+        </div>
+
+        <div class="field">
+            <label for="department">Department</label>
+            <select id="department" th:field="*{department}">
+                <option value="">Select a department</option>
+                <option value="CSE">CSE</option>
+                <option value="EEE">EEE</option>
+                <option value="BBA">BBA</option>
+                <option value="Civil">Civil</option>
+                <option value="English">English</option>
+            </select>
+            <span class="error" th:if="${#fields.hasErrors('department')}" th:errors="*{department}"></span>
+        </div>
+
+        <div class="field">
+            <label for="semester">Semester</label>
+            <input type="number" id="semester" th:field="*{semester}" min="1" max="12">
+            <span class="error" th:if="${#fields.hasErrors('semester')}" th:errors="*{semester}"></span>
+        </div>
+
+        <div class="form-actions">
+            <button class="btn btn-primary" type="submit">Save student</button>
+            <a class="link" th:href="@{/students}">Cancel</a>
+        </div>
+    </form>
+</main>
+</body>
+</html>

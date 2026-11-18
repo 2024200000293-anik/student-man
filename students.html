@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Students</title>
+    <!-- th:href="@{...}" builds the correct URL for static files -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header class="topbar">
+    <div class="container">
+        <a class="brand" th:href="@{/students}">Student Management</a>
+    </div>
+</header>
+
+<main class="container">
+    <div class="page-head">
+        <h1>Students</h1>
+        <a class="btn btn-primary" th:href="@{/students/new}">Add student</a>
+    </div>
+
+    <!-- Shown only when the controller sent a "message" -->
+    <p class="flash" th:if="${message}" th:text="${message}"></p>
+
+    <form class="search" th:action="@{/students}" method="get">
+        <input type="text" name="keyword" th:value="${keyword}" placeholder="Search by name">
+        <button class="btn" type="submit">Search</button>
+        <a class="link" th:if="${keyword != null and !#strings.isEmpty(keyword)}"
+           th:href="@{/students}">Clear search</a>
+    </form>
+
+    <div class="table-wrap" th:unless="${students.isEmpty()}">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Department</th>
+                <th>Semester</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- th:each repeats this row once per student -->
+            <tr th:each="student : ${students}">
+                <td th:text="${student.id}">1</td>
+                <td th:text="${student.name}">Name</td>
+                <td th:text="${student.email}">email@example.com</td>
+                <td th:text="${student.department}">CSE</td>
+                <td th:text="${student.semester}">1</td>
+                <td class="actions">
+                    <a class="btn btn-small" th:href="@{/students/{id}/edit(id=${student.id})}">Edit</a>
+                    <form th:action="@{/students/{id}/delete(id=${student.id})}" method="post"
+                          onsubmit="return confirm('Delete this student?');">
+                        <button class="btn btn-small btn-danger" type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p class="empty" th:if="${students.isEmpty()}">
+        No students found. Use “Add student” to create the first one.
+    </p>
+</main>
+</body>
+</html>
